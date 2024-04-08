@@ -27,12 +27,15 @@ class RaspberryPIGPIO():
         time.sleep(0.1)
 
     def set_pin(self, value):
+        red = LED(self.pin_id)
         if value == 1:
             # GPIO.output(self.pin_id, GPIO.HIGH) #Set pin High-1
-            LED(self.pin_id).on()
+            # LED(self.pin_id).on()
+            red.on()
         elif value == 0:
             # GPIO.output(self.pin_id, GPIO.LOW) #Set pin Low-0
-            LED(self.pin_id).off()
+            # LED(self.pin_id).off()
+            red.off()
 
     def read_pins_from_file():
         f = open("src/ros2_pi_gpio/pi_gpio/gpio_pins.txt", "r")
