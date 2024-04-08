@@ -51,13 +51,13 @@ class GPIOActionServer(Node):
     def __init__(self):
         super().__init__('pi_gpio_server')
 
-        pin_list = RaspberryPIGPIO.read_pins_from_file()
+        # pin_list = RaspberryPIGPIO.read_pins_from_file()
 
-        self.pin_dic = {}
-
-        for pin in pin_list:
-            pin_id, type = pin.split(',')
-            self.pin_dic[pin_id] =  RaspberryPIGPIO(int(pin_id), type)
+        # self.pin_dic = {}
+        #
+        # for pin in pin_list:
+        #     pin_id, type = pin.split(',')
+        #     self.pin_dic[pin_id] =  RaspberryPIGPIO(int(pin_id), type)
 
         self._goal_handle = None
         self._goal_lock = threading.Lock()
@@ -124,14 +124,16 @@ class GPIOActionServer(Node):
         pin_id, action_type = goal_msg.split(',')
         # blue = LED(17)
         if action_type == "high":
-            self.pin_dic[pin_id].set_pin(1)
+            # self.pin_dic[pin_id].set_pin(1)
             # blue.on()
+            LED(pin_id).on()
             time.sleep(0.1)
             result.value = 3
 
         elif action_type == "low":
-            self.pin_dic[pin_id].set_pin(0)
+            # self.pin_dic[pin_id].set_pin(0)
             # blue.off()
+            LED(pin_id).off()
             time.sleep(0.1)
             result.value = 3
 
