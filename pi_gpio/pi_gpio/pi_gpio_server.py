@@ -7,7 +7,7 @@ from rclpy.executors import MultiThreadedExecutor
 from rclpy.node import Node
 from pi_gpio_interface.action import GPIO as GPIO_Action
 # import RPi.GPIO as GPIO
-from gpiozero import LED as GPIO
+from gpiozero import LED
 
 class RaspberryPIGPIO():
     def __init__(self, pin_id, type):
@@ -29,10 +29,10 @@ class RaspberryPIGPIO():
     def set_pin(self, value):
         if value == 1:
             # GPIO.output(self.pin_id, GPIO.HIGH) #Set pin High-1
-            GPIO(self.pin_id).on()
+            LED(self.pin_id).on()
         elif value == 0:
             # GPIO.output(self.pin_id, GPIO.LOW) #Set pin Low-0
-            GPIO(self.pin_id).off()
+            LED(self.pin_id).off()
 
     def read_pins_from_file():
         f = open("src/ros2_pi_gpio/pi_gpio/gpio_pins.txt", "r")
