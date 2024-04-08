@@ -130,8 +130,8 @@ class GPIOActionServer(Node):
             time.sleep(0.1)
             result.value = 3
 
-        elif action_type == "read":
-            result.value = GPIO.input(int(pin_id))
+        # elif action_type == "read":
+        #     result.value = GPIO.input(int(pin_id))
 
         goal_handle.succeed()
         return result
@@ -146,7 +146,7 @@ def main(args=None):
 
     action_server.destroy()
 
-    GPIO.cleanup()
+    # GPIO.cleanup()
 
     rclpy.shutdown()
 
