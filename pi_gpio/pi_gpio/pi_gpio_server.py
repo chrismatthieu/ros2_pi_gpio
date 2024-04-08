@@ -35,7 +35,7 @@ class RaspberryPIGPIO():
             GPIO(self.pin_id).off()
 
     def read_pins_from_file():
-        f = open("src/pi_gpio/gpio_pins.txt", "r")
+        f = open("src/ros2_pi_gpio/pi_gpio/gpio_pins.txt", "r")
         pin_list = []
         for x in f:
             pin_list.append(x)
