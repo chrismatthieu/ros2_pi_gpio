@@ -122,7 +122,7 @@ class GPIOActionServer(Node):
 
         # get the pin ide and action type
         pin_id, action_type = goal_msg.split(',')
-        blue = LED(pin_id)
+        blue = LED(17)
         if action_type == "high":
             # self.pin_dic[pin_id].set_pin(1)
             blue.on()
