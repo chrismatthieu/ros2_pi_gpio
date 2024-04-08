@@ -6,30 +6,33 @@ from rclpy.callback_groups import ReentrantCallbackGroup
 from rclpy.executors import MultiThreadedExecutor
 from rclpy.node import Node
 from pi_gpio_interface.action import GPIO as GPIO_Action
-import RPi.GPIO as GPIO
+# import RPi.GPIO as GPIO
+from gpiozero import LED as GPIO
 
 class RaspberryPIGPIO():
     def __init__(self, pin_id, type):
         self.pin_id = pin_id
         self.type = type.rstrip()
-        GPIO.setwarnings(False)
+        # GPIO.setwarnings(False)
         #Use Broadcom pin-numbering scheme
-        GPIO.setmode(GPIO.BCM) 
-        if self.type == "in":
-            GPIO.setup(pin_id, GPIO.IN, pull_up_down=GPIO.PUD_DOWN) #Set pin as input
-            print ("Setting GPIO " + str(self.pin_id) + "-" + self.type)
-
-        elif self.type == "out":
-            GPIO.setup(pin_id, GPIO.OUT) #Set pin as output
-            print ("Setting GPIO " + str(self.pin_id) + "-" + self.type)
+        # GPIO.setmode(GPIO.BCM)
+        # if self.type == "in":
+        #     GPIO.setup(pin_id, GPIO.IN, pull_up_down=GPIO.PUD_DOWN) #Set pin as input
+        #     print ("Setting GPIO " + str(self.pin_id) + "-" + self.type)
+        #
+        # elif self.type == "out":
+        #     GPIO.setup(pin_id, GPIO.OUT) #Set pin as output
+        #     print ("Setting GPIO " + str(self.pin_id) + "-" + self.type)
 
         time.sleep(0.1)
 
     def set_pin(self, value):
         if value == 1:
-            GPIO.output(self.pin_id, GPIO.HIGH) #Set pin High-1
+            # GPIO.output(self.pin_id, GPIO.HIGH) #Set pin High-1
+            GPIO(self.pin_id).on()
         elif value == 0:
-            GPIO.output(self.pin_id, GPIO.LOW) #Set pin Low-0
+            # GPIO.output(self.pin_id, GPIO.LOW) #Set pin Low-0
+            GPIO(self.pin_id).off()
 
     def read_pins_from_file():
         f = open("src/pi_gpio/gpio_pins.txt", "r")
@@ -37,18 +40,18 @@ class RaspberryPIGPIO():
         for x in f:
             pin_list.append(x)
         f.close()
-        
+
         return pin_list
 
 class GPIOActionServer(Node):
 
     def __init__(self):
         super().__init__('pi_gpio_server')
-              
+
         pin_list = RaspberryPIGPIO.read_pins_from_file()
-        
+
         self.pin_dic = {}
-        
+
         for pin in pin_list:
             pin_id, type = pin.split(',')
             self.pin_dic[pin_id] =  RaspberryPIGPIO(int(pin_id), type)
@@ -115,13 +118,13 @@ class GPIOActionServer(Node):
         goal_handle.publish_feedback(feedback_msg)
 
         # get the pin ide and action type
-        pin_id, action_type = goal_msg.split(',')   
+        pin_id, action_type = goal_msg.split(',')
 
         if action_type == "high":
             self.pin_dic[pin_id].set_pin(1)
             time.sleep(0.1)
             result.value = 3
-       
+
         elif action_type == "low":
             self.pin_dic[pin_id].set_pin(0)
             time.sleep(0.1)
@@ -142,9 +145,9 @@ def main(args=None):
     rclpy.spin(action_server, executor=executor)
 
     action_server.destroy()
-    
+
     GPIO.cleanup()
-    
+
     rclpy.shutdown()
 
 if __name__ == '__main__':
